@@ -3,6 +3,7 @@ scikit-learn
 numpy
 seaborn 
 Flask
+dill
 
 
 #-e .

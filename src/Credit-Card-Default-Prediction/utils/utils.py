@@ -1,63 +1,89 @@
 import os
 import sys
+import dill
 import numpy as np
 import pandas as pd
-import dill
-import pickle
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import GridSearchCV
 from src.exception import CustomException
 
-
-def save_object(file_path, obj):
+def save_object(file_path: str, obj) -> None:
+    """
+    Save an object to a file using dill for serialization.
+    
+    Args:
+        file_path (str): Path where the object should be saved.
+        obj: The object to save.
+    """
     try:
         dir_path = os.path.dirname(file_path)
-
         os.makedirs(dir_path, exist_ok=True)
-
+        
         with open(file_path, "wb") as file_obj:
             dill.dump(obj, file_obj)
-
-
+            
     except Exception as e:
-        raise CustomException(e,sys)
+        raise CustomException(e, sys)
 
-def evaluate_models(X_train, y_train,X_test,y_test,models, parameter):
+def load_object(file_path: str):
+    """
+    Load an object from a file using dill.
+    
+    Args:
+        file_path (str): Path from which the object should be loaded.
+        
+    Returns:
+        The loaded object.
+    """
     try:
-        report = {}
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
+            
+    except Exception as e:
+        raise CustomException(e, sys)
 
-        for i in range(len(list(models))):
-            model = list(models.values())[i]
-            para=parameter[list(models.keys())[i]]
+def preprocess_data(train_df: pd.DataFrame, test_df: pd.DataFrame) -> (pd.DataFrame, pd.DataFrame):
+    """
+    Perform data preprocessing steps such as removing duplicates and handling missing values.
 
-            gs = GridSearchCV(model,para,cv=3)
-            gs.fit(X_train,y_train)
+    Args:
+        train_df (pd.DataFrame): Training data.
+        test_df (pd.DataFrame): Testing data.
 
-            model.set_params(**gs.best_params_)
-            model.fit(X_train,y_train)
+    Returns:
+        (pd.DataFrame, pd.DataFrame): Preprocessed training and testing data.
+    """
+    try:
+        # Removing duplicates
+        train_df.drop_duplicates(keep='first', inplace=True)
+        test_df.drop_duplicates(keep='first', inplace=True)
 
-            #model.fit(X_train, y_train)  # Train model
+        # Handling missing values (if needed, extend this as per your requirements)
+        train_df.fillna(method='ffill', inplace=True)
+        test_df.fillna(method='ffill', inplace=True)
 
-            y_train_pred = model.predict(X_train)
-
-            y_test_pred = model.predict(X_test)
-
-            train_model_score = accuracy_score(y_train, y_train_pred)
-
-            test_model_score = accuracy_score(y_test, y_test_pred)
-
-            report[list(models.keys())[i]] = test_model_score
-
-        return report
+        return train_df, test_df
 
     except Exception as e:
         raise CustomException(e, sys)
-    
 
-def load_object(file_path):
+def feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Perform feature engineering such as creating new features or modifying existing ones.
+
+    Args:
+        df (pd.DataFrame): DataFrame to perform feature engineering on.
+
+    Returns:
+        pd.DataFrame: DataFrame with engineered features.
+    """
     try:
-        with open(file_path, "rb") as file_obj:
-            return pickle.load(file_obj)
+        df['TOTAL_BILL_AMT'] = df[['BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3', 'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6']].sum(axis=1)
+        df['TOTAL_PAY_AMT'] = df[['PAY_AMT1', 'PAY_AMT2', 'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6']].sum(axis=1)
+
+        columns_to_drop = ['ID', 'BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3', 'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6',
+                           'PAY_AMT1', 'PAY_AMT2', 'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6']
+        df.drop(columns=columns_to_drop, inplace=True)
+
+        return df
 
     except Exception as e:
         raise CustomException(e, sys)
