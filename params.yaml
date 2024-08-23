@@ -1,0 +1,5 @@
+model_training:
+  n_estimators: 100  # Number of trees in the random forest
+  max_depth: 10      # Maximum depth of the tree
+  random_state: 42   # Seed for reproducibility
+  test_size: 0.2     # Test data proportion

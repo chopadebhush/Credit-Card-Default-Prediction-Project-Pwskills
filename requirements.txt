@@ -1,9 +1,13 @@
+gunicorn
+numpy
 pandas
 scikit-learn
-numpy
-seaborn 
-Flask
-dill
-
-
-#-e .
+xgboost
+joblib
+boto3
+sagemaker
+awscli
+ensure
+python-box
+flask
+-e .
