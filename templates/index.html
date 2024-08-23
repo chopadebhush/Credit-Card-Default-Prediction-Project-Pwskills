@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Default Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-size: 12px;
+            color: red;
+            display: none;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            const limitBal = document.getElementById('LIMIT_BAL').value;
+            const age = document.getElementById('AGE').value;
+            const feedback = document.getElementById('feedback');
+            let isValid = true;
+
+            feedback.innerHTML = '';
+            feedback.style.display = 'none';
+
+            if (limitBal <= 0 || isNaN(limitBal)) {
+                feedback.innerHTML += 'LIMIT_BAL should be a positive number.<br>';
+                isValid = false;
+            }
+            if (age <= 0 || isNaN(age)) {
+                feedback.innerHTML += 'AGE should be a positive number.<br>';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                feedback.style.display = 'block';
+            }
+
+            return isValid;
+        }
+    </script>
+</head>
+<body>
+    <h1>Predict Default Status</h1>
+    <form action="/predict" method="post" onsubmit="return validateForm()">
+        <label for="LIMIT_BAL">LIMIT_BAL (e.g., 240000.0):</label>
+        <input type="number" id="LIMIT_BAL" name="LIMIT_BAL" step="0.01" required>
+
+        <label for="SEX">SEX (1 = Male, 2 = Female):</label>
+        <input type="number" id="SEX" name="SEX" min="1" max="2" required>
+
+        <label for="EDUCATION">EDUCATION (1 = Graduate, 2 = University, 3 = High School, 4 = Others):</label>
+        <input type="number" id="EDUCATION" name="EDUCATION" min="1" max="4" required>
+
+        <label for="MARRIAGE">MARRIAGE (1 = Married, 2 = Single, 3 = Others):</label>
+        <input type="number" id="MARRIAGE" name="MARRIAGE" min="1" max="3" required>
+
+        <label for="AGE">AGE (e.g., 40):</label>
+        <input type="number" id="AGE" name="AGE" min="18" required>
+
+        <label for="PAY_SEPT">PAY_SEPT (Payment Status in September, -1 to 8):</label>
+        <input type="number" id="PAY_SEPT" name="PAY_SEPT" min="-1" max="8" required>
+
+        <label for="PAY_AUG">PAY_AUG (Payment Status in August, -1 to 8):</label>
+        <input type="number" id="PAY_AUG" name="PAY_AUG" min="-1" max="8" required>
+
+        <label for="PAY_JUL">PAY_JUL (Payment Status in July, -1 to 8):</label>
+        <input type="number" id="PAY_JUL" name="PAY_JUL" min="-1" max="8" required>
+
+        <label for="PAY_JUN">PAY_JUN (Payment Status in June, -1 to 8):</label>
+        <input type="number" id="PAY_JUN" name="PAY_JUN" min="-1" max="8" required>
+
+        <label for="PAY_MAY">PAY_MAY (Payment Status in May, -1 to 8):</label>
+        <input type="number" id="PAY_MAY" name="PAY_MAY" min="-1" max="8" required>
+
+        <label for="PAY_APR">PAY_APR (Payment Status in April, -1 to 8):</label>
+        <input type="number" id="PAY_APR" name="PAY_APR" min="-1" max="8" required>
+
+        <label for="BILL_AMT_SEPT">BILL_AMT_SEPT (Bill Amount in September, e.g., 0.0):</label>
+        <input type="number" id="BILL_AMT_SEPT" name="BILL_AMT_SEPT" step="0.01" required>
+
+        <label for="BILL_AMT_AUG">BILL_AMT_AUG (Bill Amount in August, e.g., 0.0):</label>
+        <input type="number" id="BILL_AMT_AUG" name="BILL_AMT_AUG" step="0.01" required>
+
+        <label for="BILL_AMT_JUL">BILL_AMT_JUL (Bill Amount in July, e.g., 0.0):</label>
+        <input type="number" id="BILL_AMT_JUL" name="BILL_AMT_JUL" step="0.01" required>
+
+        <label for="BILL_AMT_JUN">BILL_AMT_JUN (Bill Amount in June, e.g., 0.0):</label>
+        <input type="number" id="BILL_AMT_JUN" name="BILL_AMT_JUN" step="0.01" required>
+
+        <label for="BILL_AMT_MAY">BILL_AMT_MAY (Bill Amount in May, e.g., 0.0):</label>
+        <input type="number" id="BILL_AMT_MAY" name="BILL_AMT_MAY" step="0.01" required>
+
+        <label for="BILL_AMT_APR">BILL_AMT_APR (Bill Amount in April, e.g., 0.0):</label>
+        <input type="number" id="BILL_AMT_APR" name="BILL_AMT_APR" step="0.01" required>
+
+        <label for="PAY_AMT_SEPT">PAY_AMT_SEPT (Payment Amount in September, e.g., 0.0):</label>
+        <input type="number" id="PAY_AMT_SEPT" name="PAY_AMT_SEPT" step="0.01" required>
+
+        <label for="PAY_AMT_AUG">PAY_AMT_AUG (Payment Amount in August, e.g., 0.0):</label>
+        <input type="number" id="PAY_AMT_AUG" name="PAY_AMT_AUG" step="0.01" required>
+
+        <label for="PAY_AMT_JUL">PAY_AMT_JUL (Payment Amount in July, e.g., 0.0):</label>
+        <input type="number" id="PAY_AMT_JUL" name="PAY_AMT_JUL" step="0.01" required>
+
+        <label for="PAY_AMT_JUN">PAY_AMT_JUN (Payment Amount in June, e.g., 0.0):</label>
+        <input type="number" id="PAY_AMT_JUN" name="PAY_AMT_JUN" step="0.01" required>
+
+        <label for="PAY_AMT_MAY">PAY_AMT_MAY (Payment Amount in May, e.g., 0.0):</label>
+        <input type="number" id="PAY_AMT_MAY" name="PAY_AMT_MAY" step="0.01" required>
+
+        <label for="PAY_AMT_APR">PAY_AMT_APR (Payment Amount in April, e.g., 0.0):</label>
+        <input type="number" id="PAY_AMT_APR" name="PAY_AMT_APR" step="0.01" required>
+
+        <div id="feedback" class="feedback"></div>
+
+        <input type="submit" value="Predict">
+    </form>
+    <h2>{{ prediction_text }}</h2>
+</body>
+</html>

@@ -1,0 +1,42 @@
+artifacts_root: artifacts
+
+
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  source_URL: https://github.com/Govindkv/Govindkv/raw/main/Cleaned_CCD.zip
+  local_data_file: artifacts/data_ingestion/data.zip
+  unzip_dir: artifacts/data_ingestion
+
+
+data_validation:
+  root_dir: artifacts/data_validation
+  validation_dir: artifacts/data_ingestion/Cleaned_CCD
+  STATUS_FILE: artifacts/data_validation/status.txt
+  ALL_REQUIRED_FILES: ["train", "test", "validation"]
+
+
+data_transformation:
+  root_dir: artifacts/data_transformation
+  data_path: artifacts/data_ingestion/Cleaned_CCD
+  tokenizer_name: google/pegasus-cnn_dailymail
+
+
+data_transformation:
+  transformed_train_dir: artifacts/data_transformation/train
+  transformed_test_dir: artifacts/data_transformation/test
+  scaler_file: artifacts/data_transformation/scaler.pkl
+  train_file: artifacts/data_ingestion/Cleaned_CCD/train.csv  # Add train file path
+  test_file: artifacts/data_ingestion/Cleaned_CCD/test.csv  # Add test file path
+
+
+model_training:
+  model_dir: artifacts/model_training/models
+  model_file: artifacts/model_training/models/model.pkl
+  train_file: artifacts/data_transformation/train/transformed_train.csv
+  test_file: artifacts/data_transformation/test/transformed_test.csv
+
+
+model_evaluation:
+  model_file: artifacts/model_training/models/model.pkl
+  evaluation_metrics_file: artifacts/model_evaluation/metrics.txt
+  test_file: artifacts/data_transformation/test/transformed_test.csv
