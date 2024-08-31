@@ -124,9 +124,10 @@ Email: itsdeepaksingh00@gmail.com
 
     AWS_SECRET_ACCESS_KEY=
 
-    AWS_REGION = 
+    AWS_REGION = us-east-1
 
-    AWS_ECR_LOGIN_URI = demo>> 
+    AWS_ECR_LOGIN_URI = demo>>  637423658076.dkr.ecr.us-east-1.amazonaws.com/ccdp
 
-    ECR_REPOSITORY_NAME = 
+    ECR_REPOSITORY_NAME = ccd_prediction
+
 
