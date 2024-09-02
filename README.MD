@@ -17,7 +17,7 @@
 Clone the repository
 
 ```bash
-https://github.com/techfreakydeepak/Credit-Card-Default-Prediction-Project-Pwskills
+https://https://github.com/chopadebhush/Credit-Card-Default-Prediction-Project-Pwskills
 
 ```
 ### STEP 01- Create a conda environment after opening the repository
@@ -49,9 +49,9 @@ open up you local host and port
 
 
 ```bash
-Author: techfreakydeepak
+Author: bhushanchopade
 Data Scientist
-Email: itsdeepaksingh00@gmail.com
+Email: chopadebhush@gmail.com
 
 ```
 
